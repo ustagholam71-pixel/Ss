@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>طلاجات | خرید و فروش طلا</title>
+<meta name="theme-color" content="#15110c">
+<link rel="manifest" href="manifest.json">
+<style>
+  :root{
+    --bg:#15110c;
+    --surface:#1f1911;
+    --surface2:#271f14;
+    --gold:#d7ab5f;
+    --gold-deep:#a97b28;
+    --up:#4caf7d;
+    --down:#e0685f;
+    --text:#f4efe4;
+    --muted:#a89a80;
+    --line:#3a2f1e;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Vazirmatn','Tahoma','Segoe UI','Arial',sans-serif;
+    background:#0c0906;
+    background-image:radial-gradient(circle at 50% 0%, rgba(215,171,95,.06) 0%, transparent 55%);
+    color:var(--text);
+    min-height:100vh;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #app{
+    max-width:520px;
+    margin:14px auto;
+    min-height:calc(100vh - 28px);
+    background:var(--bg);
+    position:relative;
+    border:1px solid rgba(215,171,95,.3);
+    border-radius:26px;
+    box-shadow:0 0 0 1px rgba(215,171,95,.1), 0 0 0 5px rgba(215,171,95,.04), 0 26px 60px -24px rgba(0,0,0,.7);
+    display:flex;
+    flex-direction:column;
+  }
+  #view{padding-bottom:14px;flex:1;}
+
+  .topbar{position:sticky;top:0;z-index:20;background:#1a140d;border-bottom:1px solid var(--line);border-radius:26px 26px 0 0;color:var(--text);padding:14px 16px;display:flex;align-items:center;gap:10px;}
+  .topbar .back-btn{background:var(--surface2);border:1px solid var(--line);color:var(--text);width:36px;height:36px;border-radius:10px;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+  .topbar h1{font-size:16px;font-weight:700;margin:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .brand-mark{font-weight:800;font-size:18.5px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;color:var(--gold);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .brand-mark .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);display:inline-block;flex-shrink:0;}
+  .mock-pill{font-size:10px;font-weight:700;color:#e8c98a;background:rgba(215,171,95,.12);border:1px solid rgba(215,171,95,.35);border-radius:999px;padding:4px 9px;flex-shrink:0;}
+  .switch-btn{background:var(--surface2);border:1px solid var(--line);color:var(--gold);font-size:10.5px;font-weight:700;border-radius:10px;padding:7px 10px;cursor:pointer;flex-shrink:0;font-family:inherit;}
+
+  .stamp{width:40px;height:40px;border-radius:50%;border:2px dashed rgba(215,171,95,.55);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;}
+  .stamp::before{content:"";position:absolute;inset:4px;border-radius:50%;border:1px solid rgba(215,171,95,.35);}
+  .stamp span{font-size:10px;font-weight:800;color:var(--gold);letter-spacing:-.3px;}
+
+  /* ---------- Role select ---------- */
+  .role-wrap{padding:40px 20px;}
+  .role-hero{text-align:center;margin-bottom:30px;}
+  .role-hero h1{font-size:26px;color:var(--gold);margin:0 0 8px;font-weight:800;}
+  .role-hero p{font-size:13px;color:var(--muted);margin:0;line-height:1.9;}
+  .role-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;align-items:center;gap:14px;cursor:pointer;margin-bottom:14px;}
+  .role-card:active{transform:scale(.98);}
+  .role-card .r-ic{font-size:30px;width:56px;height:56px;background:var(--surface2);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .role-card .r-info h3{margin:0 0 4px;font-size:15.5px;}
+  .role-card .r-info p{margin:0;font-size:11.5px;color:var(--muted);line-height:1.8;}
+
+  /* ---------- Price hero (buyer home) ---------- */
+  .price-hero{margin:16px 16px 0;background:linear-gradient(160deg,var(--surface) 0%,#241c11 100%);border:1px solid var(--line);border-radius:22px;padding:20px 18px;position:relative;overflow:hidden;}
+  .price-hero-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
+  .price-hero-title{font-size:13px;color:var(--muted);font-weight:600;}
+  .price-hero-amount{font-size:30px;font-weight:800;color:var(--text);line-height:1.4;margin:6px 0 2px;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;}
+  .price-hero-amount .u{font-size:12.5px;color:var(--muted);font-weight:600;}
+  .change-chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;margin-top:8px;}
+  .change-chip.up{background:rgba(76,175,125,.14);color:var(--up);}
+  .change-chip.down{background:rgba(224,104,95,.14);color:var(--down);}
+  .price-hero-meta{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:10.5px;color:var(--muted);line-height:1.9;}
+  .mock-banner{margin:12px 16px 0;background:rgba(215,171,95,.08);border:1px solid rgba(215,171,95,.25);border-radius:12px;padding:10px 12px;font-size:11px;color:#e8c98a;line-height:1.8;}
+  .mini-strip{display:flex;gap:10px;overflow-x:auto;padding:4px 16px 4px;scrollbar-width:none;}
+  .mini-strip::-webkit-scrollbar{display:none;}
+  .mini-card{flex-shrink:0;min-width:130px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;}
+  .mini-card .mc-title{font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;}
+  .mini-card .mc-amount{font-size:13.5px;font-weight:800;}
+  .mini-card .mc-change{font-size:10px;font-weight:700;margin-top:4px;}
+
+  .section-head{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 8px;}
+  .section-head h3{font-size:15px;font-weight:700;margin:0;}
+  .section-head a{font-size:12px;color:var(--gold);text-decoration:none;font-weight:600;cursor:pointer;}
+
+  .search-wrap{padding:12px 16px 4px;}
+  .search-box{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:11px 14px;}
+  .search-box input{border:none;outline:none;background:transparent;font-family:inherit;font-size:14.5px;color:var(--text);flex:1;min-width:0;}
+  .search-box input::placeholder{color:var(--muted);}
+
+  .prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:6px 16px 8px;}
+  .prod-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;}
+  .prod-card:active{transform:scale(.98);}
+  .prod-thumb{width:100%;aspect-ratio:1/1;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:38px;overflow:hidden;}
+  .prod-thumb img{width:100%;height:100%;object-fit:cover;}
+  .prod-body{padding:10px;}
+  .prod-body .p-name{font-size:12.5px;font-weight:700;line-height:1.6;margin-bottom:6px;min-height:38px;}
+  .prod-body .p-meta{font-size:10.5px;color:var(--muted);margin-bottom:6px;}
+  .prod-body .p-price{font-size:13px;font-weight:800;color:var(--gold);}
+
+  .state-msg{margin:30px 16px;text-align:center;color:var(--muted);font-size:13px;line-height:2;padding:30px 16px;background:var(--surface);border-radius:16px;border:1px dashed var(--line);}
+  .state-msg .big-ic{font-size:28px;display:block;margin-bottom:8px;}
+
+  .detail-img{width:100%;aspect-ratio:1/1;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:70px;overflow:hidden;}
+  .detail-img img{width:100%;height:100%;object-fit:cover;}
+  .detail-body{padding:18px 16px 0;}
+  .detail-body h2{margin:0 0 8px;font-size:19px;font-weight:800;}
+  .detail-price{font-size:22px;font-weight:800;color:var(--gold);margin-bottom:6px;}
+  .detail-meta{font-size:12px;color:var(--muted);margin-bottom:14px;}
+
+  .block{margin:14px 16px 0;background:var(--surface);border-radius:16px;padding:16px;border:1px solid var(--line);}
+  .block h4{margin:0 0 8px;font-size:13.5px;font-weight:700;color:var(--gold);}
+  .block p{margin:0;font-size:12.5px;line-height:1.9;color:var(--muted);}
+
+  .action-row{display:flex;gap:10px;margin:14px 16px 0;}
+  .btn{flex:1;text-align:center;padding:13px 10px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;border:none;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;}
+  .btn-primary{background:var(--gold);color:#241505;}
+  .btn-secondary{background:var(--surface);color:var(--text);border:1.5px solid var(--line);}
+  .btn-danger{background:rgba(224,104,95,.15);color:var(--down);border:1.5px solid rgba(224,104,95,.4);}
+  .btn-block{width:100%;}
+
+  .contact-row{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:11px 13px;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);margin-bottom:8px;}
+  .contact-row:last-child{margin-bottom:0;}
+  .contact-row .ic{font-size:15px;}
+  .contact-row small{display:block;color:var(--muted);font-size:10.5px;margin-top:2px;}
+  .contact-row strong{font-size:12.5px;}
+
+  .comment-item{padding:10px 0;border-bottom:1px solid var(--line);}
+  .comment-item:last-child{border-bottom:none;}
+  .comment-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+  .comment-author{font-size:12.5px;font-weight:700;}
+  .comment-stars{color:var(--gold);font-size:11px;}
+  .comment-date{font-size:10px;color:var(--muted);}
+  .comment-text{font-size:12px;color:var(--muted);line-height:1.8;margin:0;}
+
+  .form-card{margin:16px 16px 0;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:7px;}
+  .field input[type=text],.field input[type=number],.field input[type=tel],.field select,.field textarea{
+    width:100%;background:var(--surface2);border:1px solid var(--line);color:var(--text);border-radius:12px;
+    padding:12px 14px;font-family:inherit;font-size:14.5px;outline:none;
+  }
+  .field textarea{min-height:80px;resize:vertical;}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);}
+  .field-error{color:var(--down);font-size:11.5px;margin-top:6px;}
+  .field-hint{color:var(--muted);font-size:10.5px;margin-top:6px;line-height:1.7;}
+  .calc-result{background:var(--surface2);border:1px dashed rgba(215,171,95,.4);border-radius:14px;padding:16px;text-align:center;}
+  .calc-result .cr-label{font-size:11px;color:var(--muted);margin-bottom:4px;}
+  .calc-result .cr-amount{font-size:20px;font-weight:800;color:var(--gold);}
+  .calc-result .cr-amount .u{font-size:11.5px;color:var(--muted);font-weight:600;}
+
+  .upload-box{border:1.5px dashed rgba(215,171,95,.4);border-radius:14px;padding:16px;text-align:center;background:var(--surface2);cursor:pointer;position:relative;}
+  .upload-box input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+  .upload-preview{width:100%;aspect-ratio:1/1;max-width:160px;margin:0 auto 10px;border-radius:12px;overflow:hidden;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:34px;}
+  .upload-preview img{width:100%;height:100%;object-fit:cover;}
+  .upload-box .u-label{font-size:12px;color:var(--gold);font-weight:700;}
+  .upload-box .u-sub{font-size:10.5px;color:var(--muted);margin-top:4px;}
+
+  .seller-id-card{margin:16px 16px 0;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;}
+  .seller-id-card .s-ic{width:44px;height:44px;border-radius:12px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:19px;color:var(--gold);flex-shrink:0;}
+  .seller-id-card .s-info{flex:1;min-width:0;}
+  .seller-id-card .s-info strong{font-size:13.5px;display:block;}
+  .seller-id-card .s-info small{font-size:11px;color:var(--muted);}
+
+  .myprod-row{display:flex;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px;margin:0 16px 10px;align-items:center;}
+  .myprod-row .mp-thumb{width:56px;height:56px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:22px;overflow:hidden;flex-shrink:0;}
+  .myprod-row .mp-thumb img{width:100%;height:100%;object-fit:cover;}
+  .myprod-row .mp-info{flex:1;min-width:0;}
+  .myprod-row .mp-name{font-size:12.5px;font-weight:700;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .myprod-row .mp-price{font-size:11.5px;color:var(--gold);font-weight:700;}
+  .myprod-row .mp-actions{display:flex;gap:6px;flex-shrink:0;}
+  .icon-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--surface2);color:var(--text);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+  .icon-btn.danger{color:var(--down);border-color:rgba(224,104,95,.4);}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--gold);color:#241505;font-size:12.5px;font-weight:700;padding:10px 18px;border-radius:999px;z-index:50;box-shadow:0 8px 20px rgba(0,0,0,.4);}
+
+  .skeleton{background:linear-gradient(90deg,#241d13 25%,#2c2317 37%,#241d13 63%);background-size:400% 100%;animation:sk 1.4s ease infinite;border-radius:12px;}
+  @keyframes sk{0%{background-position:100% 50%}100%{background-position:0 50%}}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+  .bottom-nav{position:sticky;bottom:0;background:#1a140d;border-top:1px solid var(--line);border-radius:0 0 26px 26px;display:flex;z-index:30;padding:6px 2px calc(6px + env(safe-area-inset-bottom));}
+  .nav-btn{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 1px;cursor:pointer;color:var(--muted);font-family:inherit;font-size:9.8px;font-weight:600;border-radius:10px;}
+  .nav-btn .nic{font-size:17px;}
+  .nav-btn.active{color:var(--gold);background:rgba(215,171,95,.08);}
+
+  a{color:inherit;}
+  ::selection{background:var(--gold);color:#241505;}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important;}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="topbar" id="topbar"></header>
+  <main id="view">
+    <noscript>
+      <div style="padding:40px 20px;text-align:center;">این صفحه برای نمایش نیاز به اجرای جاوااسکریپت دارد. لطفاً فایل را در یک مرورگر کامل باز کنید.</div>
+    </noscript>
+  </main>
+  <nav class="bottom-nav" id="bottomNav" style="display:none;"></nav>
+</div>
+<script type="module">
+  // پل اتصال به فایربیس — چون بقیه برنامه از نوع ماژول جاوااسکریپت
+  // نیست، توابع لازم فایربیس را روی window.FB می‌گذاریم تا کد اصلی
+  // بتواند از آن‌ها استفاده کند.
+  // نکته: از Firebase Storage استفاده نمی‌کنیم چون در پلن رایگان
+  // (Spark) بدون کارت بانکی/ارتقا به Blaze در دسترس نیست؛ عکس‌ها
+  // به‌صورت فشرده مستقیم داخل خود سند Firestore ذخیره می‌شوند.
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+  import {
+    getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc,
+    getDocs, getDoc
+  } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+  var firebaseConfig = {
+    apiKey: "AIzaSyD9kk1Em_wHEuD1Q-yfgRdepr9VB8HTPxs",
+    authDomain: "tala-e2982.firebaseapp.com",
+    projectId: "tala-e2982",
+    storageBucket: "tala-e2982.firebasestorage.app",
+    messagingSenderId: "207856832796",
+    appId: "1:207856832796:web:cd4a1ee81ef76f81a4ead9",
+    measurementId: "G-RGPWJ2EKSL"
+  };
+
+  try {
+    var app = initializeApp(firebaseConfig);
+    var db = getFirestore(app);
+    window.FB = {
+      db: db,
+      collection: collection, doc: doc, addDoc: addDoc, setDoc: setDoc,
+      updateDoc: updateDoc, deleteDoc: deleteDoc, getDocs: getDocs, getDoc: getDoc
+    };
+  } catch (e) {
+    // فایربیس بارگذاری نشد (مثلاً اینترنت قطع بود)؛ برنامه با
+    // حالت آفلاین/محلی ادامه می‌دهد.
+    window.FB = null;
+  }
+</script>
+<script>
+/* =========================================================
+   طلاجات — اپلیکیشن خرید و فروش طلا (پنل خریدار + پنل فروشنده)
+   نسخه دمو: بدون Firebase — داده‌ها با localStorage روی همین
+   دستگاه ذخیره می‌شوند (محصولات، عکس‌ها به‌صورت Data URL، نام
+   سایت، و هویت ساده فروشنده).
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  var DATA = null;              // { siteName, meta, prices } — از data.json یا نسخه پشتیبان
+  var PRODUCTS = [];            // منبع اصلی محصولات (پایدار در localStorage)
+  var SITE_NAME = "";
+  var CURRENT_SELLER = null;    // { id, name, phone, address } یا null
+  var FIREBASE_OK = null;       // null=هنوز مشخص نیست، true=متصل، false=آفلاین/بدون فایربیس
+  var DATA_ERROR = false;
+  var LAST_CHECK = null;
+  var LAST_CHECK_FAILED = false;
+  var REFRESHING = false;
+  var PENDING_IMAGE = null;     // Data URL عکسِ در حال آماده‌سازی برای فرم افزودن/ویرایش
+
+  var viewEl = document.getElementById("view");
+  var topbarEl = document.getElementById("topbar");
+  var bottomNavEl = document.getElementById("bottomNav");
+
+  var PWA_ICON_192 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAIhElEQVR4nO2dP7LUOBCHe6gNSQjIOAuX4A4EFMehCLjDuwRnISMgIWcDyuA32B7JVrf6z/dFW7W7M7L0+7olj2feTZzx+tXLX7PHALp8//HzNnsMC1MHQthhYZYU5m9K6OERljKYvRHBh14sRFB/A4IPV9EUQe2FCT6MRkOE4S9I8EGbkSK8GPVCIoQfbBiZsyEmEXyYxdVucLkDEH6YydX8XRKA8IMHruTwtACEHzxxNo+nBCD84JEzuewWgPCDZ3rz2SUA4YcI9OS0WQDCD5FozWuTAIQfItKS24cCEH6IzKP8Dn0UAiAahwJQ/SEDRzneFYDwQyb28swWCEqzKQDVHzKylWs6AJTmHwGo/pCZ+3zTAaA0zwSg+kMF1jmnA0Bp/ghA9YdKLHmnA0BpEABKcxNh+wN1oQNAaRAASvPf7AFU4OuXd6f/37fvnwaOBO7hDDCQK0HvBTHGcCP857EM/CMQ4hwI0Imn0O+BDO0gQAMRQr8HMhyDAAdEDv49iLANAmwwOvhXwudpLBlBgBUjwmYRsCjjjAACSPz79NHHP5PyApwJj+fQZLsebcoK0BuUiCGpcI1XKSlATzAyhKLa9fZQSoDqQah+/VuUEaB18SssPHPxlxKPQ7Pgz2m9zkwfBO6RugMQ/MdUn6O0HaD6wrZSvRuk7AAti1U9+FtUnLd0HaDiIo6iZV6ydYJUHcBz+D99eNP133/8/E1pJI/xPI+jSSOAp0XrDXsrllJ4mk9NUgjwaLEsFkor9HtYyeBhbjVJ/6sQmgvUE/rewD567fW/15Th7fundPv+NeE7wNHiaIX/UTi1AjnrfUXmzLMFoQWwbs9HAbQ+tFqPJetWKKwAlgviKfj3WI4towQpBdAO/+zQ72Ex1mxboZAfhBH+bbbGNvru1NH8Rjwsh+sAFuGPFvwttK8hSycI2QE0yRB+EZtukIFQHUC76twHJGLwt9C6rgxdIEwHIPznub+WUZ0gw3kgjACaZA7/gpYE0QkhgGb1rxD+BQ0JoneBEALsQfj7sZbAO+4F0KoiFcO/YLkd8t4F3Auwx8iqUyn8C6OvOWoXcC2ARfWvGP6F9bVX7QKuBdjjSrXh7sc+V+cmYhdwK4BG1ai879/D6jzgtQu4FWCPUVWG8P9l5FxE6wLhBDgLW592Ks2Vy+8Ea7dLzz85MquCfvz8TT34X7+8c9chXD4MtxeSs5M3+67PWaFnhGXUXI1eQy1cdoAMjOhi69fwFpwsuDsDjN7+zNjPamzhZtxF0Zg7b3eD3Amwx4gKaLH90Vxgi/CMmqMoHYst0CCsKtvyPlEC5p0wHeAMVoffGW1d8z2tHpHwgCsBvO0PQQdP6+xKgD08t/uZi+kpSFt4XreFEAKcwWL74yGAWmOosg1KK4A2HsK/4Gks0UAAKA0CQGncCBDl2RERn1sOj2MS2V8/L+N1I8BIZj/8loUKB+GUAgC0ggCdeGndW3gem1cQAEqDAFAaBIDSIACUBgGgNAgApUEAKA0CdOLx0YwFz2PzCgJAaVIKUOEZFgsqPFOVUgBtPG41PI4pAm4E8P7YLJzD+2PubgQAmAECnMRLBRPxNZZopBXA4iDsIXhaY6hwABZJLIAVMyXwIGB0QgjAQTgmEdbNlQCjK5rV5wEzKrHme2pvfzx1Ln4dehDLompXPU/hyYCrDqCNxafCmgG1CH+1T87DCHC2ss64g6ER1BmVX+NvhHnD3Rbo7funMJN3xDqwkf5InjbersmdABqs/wTopw9vzLtCjwwzA1Ll3v+aUAKM+juzMyRY8FYBF0bu/SN1cJdnAI2QVKloI9CaK4/yuxTAgmp3O46oPBfhBLjSXu8rW+WFX7ifg6vVP9L2R8SxAFrtkq3QPppz43H7I+JYgCOuVhm+Mvmb0Xd9olV/EecCWFWNihJYXrPX6i/iXIAjRnYBkVoSjN73i8Ss/iIBBNCsHhUl0Aj/EZ6rv0gAAY4YUXUqSaAV/qjVXySIAEdVBAnamBF+79VfJIgAFmSWwHrbE4nb61cvf80eRCsW1WYr+FEDo30t0au/SLAOoL0VEtkOSMRuQPjbCPU0qBVLUNYhWv7ZezfI1MEsCNUBRGy6wEK0bmAV/izVXyTYGWCN5SIchX52dbUeW6bwiyQVQERnMTyJMGMsnr/NdpawAojMW5BH2yCtAM56X5Gc4RcJLoDI3Jbccx7oDafma58h29ZnIbwAIj4Wx/pwbLnl8jC/WqS/DTrqi/SPsPiOwYwDd+TnfFpI0QFE2hbKy0+OtDD77pL3+RxFGgFE6iyaNpXmMdwHYUe0LEr2ln6VSuEXSSaACBJcoVr4RZJtgda0hjzbgp6h8lyl6wALrYtVvRtUDr9I4g6wpvoib8Gc/CZtB1hDN3gO4f9LiQ6w0BPwjItf/fq3KCXAQrUgVLveHkoKINK/3YkYjArXeJWyAiyc2fd7Dkq269GmvAAi1w6/HsITffwzQYAVI+4CWQQqyjgjgAAbjL4deiVsnsaSEQQ4INPnAgR/GwRoILIIBP8YBOgkggyEvh0EuIAnGQj9OW4iIkgwBkshCPwYEMAA7tP7BQGgNCUehwbYAwGgNC9ERL7/+HmbPRAAa77/+HmjA0BpEABK80cAtkFQiSXvdAAozTMB6AJQgXXO6QBQmn8EoAtAZu7zTQeA0mwKQBeAjGzlmg4ApdkVgC4AmdjL82EHQALIwFGO2QJBaR4KQBeAyDzKb1MHQAKISEtum7dASACRaM1r1xkACSACPTntPgQjAXimN5+n7gIhAXjkTC5P3wZFAvDE2Txe+hwACcADV3J4+YMwJICZXM3f0PDyC3NgxajCO/RRCLoBWDAyZ2qBpRvAaDQKrHrFRgS4iubOwmzLggjQi8WW2nzPjgjwCMuz5NRDKzLAwqwbKP8DcSIvFDYrQm8AAAAASUVORK5CYII=";
+
+  var LS_PRODUCTS = "talajat_products_v1";
+  var LS_SITE_NAME = "talajat_siteName_v1";
+  var LS_SELLER = "talajat_seller_v1";
+
+  /* =========================================================
+     نسخه پشتیبان داده (برای کارکرد بدون سرور / با file://)
+     ========================================================= */
+  var FALLBACK_DATA = {
+    "siteName": "طلاجات",
+    "meta": { "isMock": true, "sourceLabel": "داده نمونه (Mock) — آماده اتصال به API واقعی", "lastUpdated": "1404/05/19 - 09:30", "currency": "تومان" },
+    "prices": [
+      { "id": "gold18", "title": "طلای ۱۸ عیار", "stamp": "750", "unit": "گرم", "price": 6850000, "previousPrice": 6800000, "change": 50000, "changePercent": 0.74, "gramBased": true, "karat": 18 },
+      { "id": "gold24", "title": "طلای ۲۴ عیار", "stamp": "999", "unit": "گرم", "price": 9133000, "previousPrice": 9067000, "change": 66000, "changePercent": 0.73, "gramBased": true, "karat": 24 },
+      { "id": "mesghal", "title": "مثقال طلا", "stamp": "18K", "unit": "مثقال (۴.۳۳۱۸ گرم)", "price": 29673000, "previousPrice": 29950000, "change": -277000, "changePercent": -0.92, "gramBased": false },
+      { "id": "ounce", "title": "اونس جهانی طلا", "stamp": "999", "unit": "اونس (۳۱.۱ گرم)", "price": 284068000, "previousPrice": 281500000, "change": 2568000, "changePercent": 0.91, "gramBased": false }
+    ],
+    "products": [
+      { "id": "prod-001", "name": "النگو طلا ۱۸ عیار ساده", "icon": "💫", "image": null, "weight": 12.5, "karat": 18, "price": 85625000, "description": "النگوی ساده طلای ۱۸ عیار با طراحی کلاسیک، مناسب استفاده روزمره. قیمت شامل اجرت ساخت است.", "sellerId": "seller-demo-1", "sellerName": "طلافروشی درخشان", "sellerPhone": "09121230099", "ojrat": 0, "sellerAddress": "تهران، بازار طلافروشان، پاساژ درخشان", "comments": [ { "author": "لیلا صادقی", "rating": 5, "text": "کیفیت ساخت خیلی خوب بود و وزن دقیقاً مطابق فاکتور بود.", "date": "1404/04/15" } ] },
+      { "id": "prod-002", "name": "گردنبند طلا ۱۸ عیار طرح برگ", "icon": "🍃", "image": null, "weight": 6.2, "karat": 18, "price": 42470000, "description": "گردنبند سبک با طرح برگ، مناسب هدیه. زنجیر و آویز به‌صورت یکپارچه ساخته شده‌اند.", "sellerId": "seller-demo-1", "sellerName": "طلافروشی درخشان", "sellerPhone": "09121230099", "ojrat": 0, "sellerAddress": "تهران، بازار طلافروشان، پاساژ درخشان", "comments": [ { "author": "نگین عباسی", "rating": 5, "text": "خیلی ظریف و شیک بود، دقیقاً همون چیزی که میخواستم.", "date": "1404/04/22" } ] },
+      { "id": "prod-003", "name": "انگشتر طلا ۲۴ عیار آب‌شده", "icon": "💍", "image": null, "weight": 3.8, "karat": 24, "price": 34705000, "description": "انگشتر ساده از طلای آب‌شده ۲۴ عیار، مناسب کسانی که به دنبال خلوص بالا هستند نه طراحی خاص.", "sellerId": "seller-demo-2", "sellerName": "صرافی و طلافروشی مهر", "sellerPhone": "02133112233", "ojrat": 0, "sellerAddress": "تهران، خیابان فردوسی، نبش کوچه بانک ملی", "comments": [] }
+    ]
+  };
+
+  /* =========================================================
+     لایه داده — قیمت طلا
+     =========================================================
+     getGoldPrices() تنها نقطه اتصال قیمت طلاست. اکنون از
+     data.json/نسخه پشتیبان می‌خواند. برای اتصال به API واقعی:
+     این تابع را بازنویسی کنید تا به بک‌اند اختصاصی شما (نه
+     مستقیم به سرویس API) وصل شود؛ کلید API هرگز نباید در کد
+     فرانت‌اند قرار گیرد.
+
+     نکته درباره محصولات و عکس‌ها (نسخه دمو):
+     محصولاتی که فروشنده اضافه می‌کند، همراه با عکس (Data URL)
+     در localStorage همین مرورگر/دستگاه ذخیره می‌شوند و بین
+     دستگاه‌ها به اشتراک گذاشته نمی‌شوند. برای نسخه واقعی و
+     چندکاربره، باید محصولات و عکس‌ها را در یک بک‌اند واقعی
+     (پایگاه‌داده + سرویس ذخیره‌سازی فایل، برای مثال Firebase
+     Firestore + Firebase Storage، یا هر سرویس مشابه) نگه
+     داشت و هویت فروشنده را با یک سیستم احراز هویت واقعی
+     (مثلاً Firebase Auth) کنترل کرد.
+     ========================================================= */
+  function fetchDataFile() {
+    if (!window.fetch || location.protocol === "file:") {
+      return Promise.reject(new Error("file-protocol"));
+    }
+    return fetch("data.json", { cache: "no-store" }).then(function (res) {
+      if (!res.ok) throw new Error("fetch-failed");
+      return res.json();
+    });
+  }
+
+  /* =========================================================
+     لایه داده — قیمت طلا (اتصال واقعی به BrsApi.ir)
+     =========================================================
+     برای فعال‌سازی، کلید رایگان خودتان را که از brsapi.ir
+     گرفته‌اید، بین گیومه‌های زیر جای‌گذاری کنید:
+     ========================================================= */
+  var BRSAPI_KEY = "Bz22VQ6fwgyThpKx25VLttaAFyKP4Wgx"; // <-- کلید واقعی خودتان را اینجا بین گیومه بگذارید
+
+  /* ⚠️ نکته امنیتی صادقانه: چون این یک برنامه تک‌فایلی و بدون
+     بک‌اند است، این کلید داخل کدی قرار می‌گیرد که در مرورگر
+     کاربر اجرا می‌شود — یعنی هر کسی که "مشاهده کد صفحه" را
+     بزند می‌تواند کلید را ببیند. برای یک دموی شخصی روی گوشی
+     خودتان اشکالی ندارد، اما اگر این سایت را عمومی/برای دیگران
+     منتشر کردید، بهتر است این درخواست را از یک بک‌اند کوچک
+     (که کلید را پنهان نگه می‌دارد) بزنید، نه مستقیم از همین‌جا.
+
+     ⚠️ نکته دیگر: اگر BrsApi.ir برای درخواست‌های مرورگری
+     (CORS) محدودیت داشته باشد، این درخواست با خطا مواجه
+     می‌شود و برنامه به‌طور خودکار به داده نمونه برمی‌گردد —
+     بدون این‌که کل برنامه خراب شود. */
+  function getGoldPrices() {
+    if (!BRSAPI_KEY) return Promise.reject(new Error("no-api-key"));
+    var url = "https://Api.BrsApi.ir/Market/Gold_Currency.php?key=" + encodeURIComponent(BRSAPI_KEY);
+    return fetch(url, { cache: "no-store" }).then(function (res) {
+      if (!res.ok) throw new Error("fetch-failed");
+      return res.json();
+    }).then(function (json) {
+      if (!json || !Array.isArray(json.gold)) throw new Error("bad-shape");
+      function findSym(sym) {
+        for (var i = 0; i < json.gold.length; i++) if (json.gold[i].symbol === sym) return json.gold[i];
+        return null;
+      }
+      var g18 = findSym("IR_GOLD_18K");
+      var g24 = findSym("IR_GOLD_24K");
+      var melted = findSym("IR_GOLD_MELTED");
+      var ounce = findSym("XAUUSD");
+      if (!g18 || !g24) throw new Error("missing-fields");
+
+      function toPriceItem(item, id, title, stamp, unit, gramBased, karat, unitCurrency) {
+        return {
+          id: id, title: title, stamp: stamp, unit: unit,
+          price: item.price, previousPrice: item.price - item.change_value,
+          change: item.change_value, changePercent: item.change_percent,
+          gramBased: !!gramBased, karat: karat || null,
+          unitCurrency: unitCurrency || "تومان"
+        };
+      }
+
+      var prices = [
+        toPriceItem(g18, "gold18", "طلای ۱۸ عیار", "750", "گرم", true, 18),
+        toPriceItem(g24, "gold24", "طلای ۲۴ عیار", "999", "گرم", true, 24)
+      ];
+      if (melted) prices.push(toPriceItem(melted, "mesghal", "طلای آب‌شده (نقدی)", "18K", "مثقال (تقریبی)", false));
+      if (ounce) prices.push(toPriceItem(ounce, "ounce", "اونس جهانی طلا", "999", "اونس", false, null, "دلار"));
+
+      var meta = {
+        isMock: false,
+        sourceLabel: "داده واقعی و لحظه‌ای از BrsApi.ir",
+        lastUpdated: g18.date + " - " + g18.time,
+        currency: "تومان"
+      };
+      return { meta: meta, prices: prices };
+    });
+  }
+
+  /* ---------------- Utilities ---------------- */
+
+  function esc(str) {
+    if (str === null || str === undefined) return "";
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  // کیبورد فارسی/عربی گوشی‌ها معمولاً حتی در فیلدهای عددی هم ارقام
+  // فارسی (۰-۹) یا عربی (٠-٩) وارد می‌کند که parseFloat آن‌ها را
+  // نمی‌شناسد. این تابع هر دو نوع را قبل از پردازش به ارقام انگلیسی
+  // تبدیل می‌کند تا فرم‌ها همیشه درست کار کنند.
+  function toEnglishDigits(str) {
+    if (str === null || str === undefined) return "";
+    var fa = "۰۱۲۳۴۵۶۷۸۹", ar = "٠١٢٣٤٥٦٧٨٩";
+    return String(str).replace(/[۰-۹٠-٩]/g, function (ch) {
+      var i = fa.indexOf(ch);
+      if (i !== -1) return String(i);
+      i = ar.indexOf(ch);
+      return i !== -1 ? String(i) : ch;
+    });
+  }
+  function parseNum(val) {
+    return parseFloat(toEnglishDigits(val).replace(/[^\d.\-]/g, ""));
+  }
+  function digitsOnly(val) {
+    return toEnglishDigits(val).replace(/\D/g, "");
+  }
+
+  function formatToman(n) {
+    try { return new Intl.NumberFormat("fa-IR").format(Math.round(n)); } catch (e) { return String(Math.round(n)); }
+  }
+
+  function safeGetLS(key, fallback) {
+    try { var raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch (e) { return fallback; }
+  }
+  function safeSetLS(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); return true; } catch (e) { return false; }
+  }
+
+  function findPrice(id) {
+    if (!DATA) return null;
+    for (var i = 0; i < DATA.prices.length; i++) if (DATA.prices[i].id === id) return DATA.prices[i];
+    return null;
+  }
+  function findProduct(id) {
+    for (var i = 0; i < PRODUCTS.length; i++) if (PRODUCTS[i].id === id) return PRODUCTS[i];
+    return null;
+  }
+
+  function changeChipHTML(item) {
+    var isUp = item.change >= 0;
+    var arrow = isUp ? "▲" : "▼";
+    var sign = isUp ? "+" : "";
+    var cur = item.unitCurrency || "تومان";
+    return '<span class="change-chip ' + (isUp ? "up" : "down") + '">' + arrow + " " + esc(sign + formatToman(item.change)) + " " + esc(cur) + " &nbsp;|&nbsp; " + esc(sign + item.changePercent.toFixed(2)) + "٪</span>";
+  }
+
+  function ratingStars(rating) {
+    var full = Math.round(rating), out = "";
+    for (var i = 0; i < 5; i++) out += i < full ? "★" : "☆";
+    return out;
+  }
+
+  function genId(prefix) {
+    return prefix + "-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 7);
+  }
+
+  function toast(msg) {
+    var el = document.createElement("div");
+    el.className = "toast";
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(function () { el.remove(); }, 1900);
+  }
+
+  /* ---------------- Products persistence (Firebase Firestore) ---------------- */
+  /* محصولات و عکس‌ها روی فایربیس (برای همه دستگاه‌ها مشترک) ذخیره
+     می‌شوند. یک نسخه محلی هم برای نمایش آفلاین نگه‌داری می‌شود. */
+
+  var PRODUCTS_COLLECTION = "products";
+
+  function fb() { return window.FB || null; }
+
+  // اگر عملیات فایربیس بیش از حد طول بکشد (مثلاً اینترنت ضعیف است یا
+  // Storage/Firestore درست فعال نشده)، به‌جای معطل ماندن ابدی، بعد از
+  // مهلت مشخص یک خطای واضح برمی‌گرداند تا کاربر بی‌خبر نماند.
+  function withTimeout(promise, ms, label) {
+    return new Promise(function (resolve, reject) {
+      var done = false;
+      var timer = setTimeout(function () {
+        if (done) return;
+        done = true;
+        reject(new Error("timeout:" + label));
+      }, ms);
+      promise.then(function (v) {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        resolve(v);
+      }, function (e) {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        reject(e);
+      });
+    });
+  }
+  var FB_TIMEOUT_MS = 20000;
+  function fbErrorMessage(err) {
+    var msg = (err && err.message) || '';
+    if (msg.indexOf('timeout:') === 0) {
+      return 'اتصال به فایربیس بیش از حد طول کشید (بیش از ۲۰ ثانیه) — اینترنت خود را بررسی کنید یا مطمئن شوید Storage در پنل فایربیس فعال است.';
+    }
+    return 'ثبت/ذخیره ناموفق بود — اتصال اینترنت یا تنظیمات فایربیس را بررسی کنید.';
+  }
+
+
+  function loadProductsFromFirebase() {
+    var FB = fb();
+    if (!FB) return Promise.reject(new Error("firebase-unavailable"));
+    return withTimeout(FB.getDocs(FB.collection(FB.db, PRODUCTS_COLLECTION)).then(function (snap) {
+      var list = [];
+      snap.forEach(function (docSnap) {
+        var data = docSnap.data();
+        data.id = docSnap.id;
+        list.push(data);
+      });
+      return list;
+    }), FB_TIMEOUT_MS, "load-products");
+  }
+
+  function cacheProductsLocally() { safeSetLS(LS_PRODUCTS, PRODUCTS); }
+
+  // چون Firebase Storage در پلن رایگان (Spark) دیگر بدون کارت بانکی
+  // در دسترس نیست، عکس‌ها را (که از قبل در همین مرورگر فشرده و بسیار
+  // کوچک شده‌اند، حدود ۳۰-۵۰ کیلوبایت) مستقیماً به‌صورت یک رشته
+  // Base64 داخل خودِ سند Firestore ذخیره می‌کنیم — Firestore کاملاً
+  // رایگان است و به این حجم کوچک نیازی به Storage نیست.
+  function uploadImageIfNeeded(dataUrl, idHint) {
+    return Promise.resolve(dataUrl || null);
+  }
+
+  // afzudan محصول جدید — Promise برمی‌گرداند: resolve(true) موفق، reject(err) ناموفق
+  function addProduct(obj) {
+    var FB = fb();
+    if (!FB) return Promise.reject(new Error("firebase-unavailable"));
+    var newId = genId("prod");
+    return withTimeout(uploadImageIfNeeded(obj.image, newId).then(function (imageUrl) {
+      obj.image = imageUrl;
+      obj.comments = [];
+      return FB.setDoc(FB.doc(FB.db, PRODUCTS_COLLECTION, newId), obj);
+    }).then(function () {
+      obj.id = newId;
+      PRODUCTS.unshift(obj);
+      cacheProductsLocally();
+      return true;
+    }), FB_TIMEOUT_MS, "add-product");
+  }
+
+  function updateProduct(id, patch) {
+    var FB = fb();
+    if (!FB) return Promise.reject(new Error("firebase-unavailable"));
+    var p = findProduct(id);
+    if (!p) return Promise.reject(new Error("not-found"));
+    var imageWillChange = patch.hasOwnProperty("image");
+    var imagePromise = imageWillChange ? uploadImageIfNeeded(patch.image, id) : Promise.resolve(undefined);
+    return withTimeout(imagePromise.then(function (imageUrl) {
+      var finalPatch = {};
+      for (var k in patch) if (patch.hasOwnProperty(k)) finalPatch[k] = patch[k];
+      if (imageWillChange) finalPatch.image = imageUrl;
+      return FB.updateDoc(FB.doc(FB.db, PRODUCTS_COLLECTION, id), finalPatch).then(function () {
+        return finalPatch;
+      });
+    }).then(function (finalPatch) {
+      for (var k2 in finalPatch) if (finalPatch.hasOwnProperty(k2)) p[k2] = finalPatch[k2];
+      cacheProductsLocally();
+      return true;
+    }), FB_TIMEOUT_MS, "update-product");
+  }
+
+  function deleteProduct(id) {
+    var FB = fb();
+    if (!FB) return Promise.reject(new Error("firebase-unavailable"));
+    return withTimeout(FB.deleteDoc(FB.doc(FB.db, PRODUCTS_COLLECTION, id)).then(function () {
+      PRODUCTS = PRODUCTS.filter(function (p) { return p.id !== id; });
+      cacheProductsLocally();
+      return true;
+    }), FB_TIMEOUT_MS, "delete-product");
+  }
+
+  /* ---------------- Site name (Firestore settings/site) ---------------- */
+
+  function loadSiteNameFromFirebase() {
+    var FB = fb();
+    if (!FB) return Promise.reject(new Error("firebase-unavailable"));
+    return withTimeout(FB.getDoc(FB.doc(FB.db, "settings", "site")).then(function (snap) {
+      if (snap.exists && snap.exists() && snap.data().siteName) return snap.data().siteName;
+      throw new Error("not-set");
+    }), FB_TIMEOUT_MS, "load-sitename");
+  }
+
+  function saveSiteName(name) {
+    var FB = fb();
+    if (!FB) return Promise.reject(new Error("firebase-unavailable"));
+    return withTimeout(FB.setDoc(FB.doc(FB.db, "settings", "site"), { siteName: name }, { merge: true }).then(function () {
+      SITE_NAME = name;
+      try { localStorage.setItem(LS_SITE_NAME, name); } catch (e) {}
+      return true;
+    }), FB_TIMEOUT_MS, "save-sitename");
+  }
+
+  function saveSeller(seller) {
+    CURRENT_SELLER = seller;
+    safeSetLS(LS_SELLER, seller);
+  }
+  function logoutSeller() {
+    CURRENT_SELLER = null;
+    try { localStorage.removeItem(LS_SELLER); } catch (e) {}
+  }
+
+  /* ---------------- Router ---------------- */
+
+  function navigate(hash) {
+    if (location.hash === hash) render();
+    else location.hash = hash;
+  }
+
+  window.addEventListener("hashchange", render);
+  window.addEventListener("DOMContentLoaded", function () {
+    try { init(); } catch (e) { showFatalError(e); }
+  });
+  window.addEventListener("error", function (e) {
+    if (!viewEl || !viewEl.innerHTML.trim()) showFatalError(e.error || e.message);
+  });
+
+  function showFatalError(err) {
+    var msg = (err && err.message) ? err.message : String(err);
+    if (viewEl) {
+      viewEl.innerHTML =
+        '<div style="margin:40px 16px;padding:24px;text-align:center;background:#1f1911;border:1px solid #3a2f1e;border-radius:16px;color:#f4efe4;font-size:13px;line-height:2;">' +
+        '⚠️ برنامه با خطا مواجه شد.<br>لطفاً این فایل را در یک مرورگر کامل (Chrome یا Safari) باز کنید.' +
+        '<br><br><span style="font-size:10.5px;color:#a89a80;direction:ltr;display:inline-block;">' + esc(msg) + "</span></div>";
+    }
+  }
+
+  function init() {
+    loadAll();
+    initPWA();
+  }
+
+  /* =========================================================
+     PWA — نصب روی صفحه اصلی گوشی
+     =========================================================
+     محدودیت واقعی مرورگرها: سرویس‌ورکر (لازم برای تضمین نصب
+     خودکار در Chrome) باید یک فایل جداگانه و قابل‌دریافت باشد؛
+     امکان قراردادن آن داخل یک فایل HTML واحد وجود ندارد. برای
+     همین این بخش:
+       ۱. مانیفست را با Blob URL همین‌جا می‌سازد (این روش واقعاً
+          کار می‌کند و نیاز به فایل جدا ندارد).
+       ۲. اگر مرورگر با همین مانیفست اجازه نصب خودکار بدهد
+          (رویداد beforeinstallprompt)، از همان استفاده می‌کند.
+       ۳. در غیر این صورت، راهنمای نصب دستی (که در همه مرورگرها
+          همیشه کار می‌کند) را نشان می‌دهد.
+     برای نصب خودکارِ تضمین‌شده در همه حالت‌ها، باید manifest.json
+     و sw.js به‌صورت فایل جداگانه کنار index.html قرار بگیرند.
+     ========================================================= */
+  var LS_PWA_ASKED = "talajat_pwa_asked_v1";
+  var deferredInstallPrompt = null;
+
+  function initPWA() {
+    // مانیفست اکنون یک فایل واقعی (manifest.json) است — این خودش
+    // در index.html به‌صورت <link rel="manifest"> لینک شده.
+    try {
+      var appleIcon = document.createElement("link");
+      appleIcon.rel = "apple-touch-icon";
+      appleIcon.href = PWA_ICON_192;
+      document.head.appendChild(appleIcon);
+    } catch (e) {}
+
+    // ثبت سرویس‌ورکر واقعی — شرط لازم Chrome برای پیشنهاد خودکار نصب.
+    // فقط روی http/https کار می‌کند؛ روی file:// یا مرورگرهای خیلی
+    // قدیمی بی‌صدا نادیده گرفته می‌شود، بدون این‌که بقیه برنامه بشکند.
+    if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    }
+
+    window.addEventListener("beforeinstallprompt", function (e) {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+    });
+
+    window.addEventListener("appinstalled", function () {
+      safeSetLS(LS_PWA_ASKED, true);
+    });
+
+    // اگر قبلاً یک‌بار پرسیده‌ایم یا برنامه از قبل نصب شده، دوباره نمی‌پرسیم
+    var alreadyAsked = safeGetLS(LS_PWA_ASKED, false);
+    var isStandaloneAlready = window.matchMedia && window.matchMedia("(display-mode: standalone)").matches;
+    if (alreadyAsked || isStandaloneAlready) return;
+
+    setTimeout(function () { showInstallAskModal(); }, 1200);
+  }
+
+  function detectPlatform() {
+    var ua = navigator.userAgent || "";
+    var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+    var isAndroid = /Android/.test(ua);
+    return isIOS ? "ios" : (isAndroid ? "android" : "desktop");
+  }
+
+  function showInstallAskModal() {
+    var overlay = document.createElement("div");
+    overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:flex;align-items:flex-end;justify-content:center;";
+    var platform = detectPlatform();
+    overlay.innerHTML =
+      '<div style="width:100%;max-width:520px;background:var(--surface);border:1px solid var(--line);border-top-right-radius:22px;border-top-left-radius:22px;padding:22px 18px calc(20px + env(safe-area-inset-bottom));">' +
+        '<div style="text-align:center;font-size:34px;margin-bottom:10px;">📲</div>' +
+        '<h3 style="text-align:center;margin:0 0 8px;font-size:16px;color:var(--gold);">نصب ' + esc(SITE_NAME || "طلاجات") + " روی صفحه اصلی" + "</h3>" +
+        '<p style="text-align:center;margin:0 0 18px;font-size:12.5px;color:var(--muted);line-height:1.9;">می‌خواهید این برنامه را نصب کنید تا مثل یک اپ واقعی، مستقیم از صفحه اصلی گوشی باز شود؟</p>' +
+        '<div style="display:flex;gap:10px;">' +
+          '<button class="btn btn-primary" id="pwaYesBtn">بله، نصب کن</button>' +
+          '<button class="btn btn-secondary" id="pwaNoBtn">فعلاً نه</button>' +
+        "</div>" +
+      "</div>";
+    document.body.appendChild(overlay);
+
+    function close() {
+      safeSetLS(LS_PWA_ASKED, true);
+      overlay.remove();
+    }
+
+    document.getElementById("pwaNoBtn").addEventListener("click", close);
+
+    document.getElementById("pwaYesBtn").addEventListener("click", function () {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then(function () { deferredInstallPrompt = null; });
+        close();
+        return;
+      }
+      // مرورگر اجازه نصب خودکار نداد؛ راهنمای دستی نشان بده (همیشه کار می‌کند)
+      showManualInstallGuide(platform, overlay);
+    });
+  }
+
+  function showManualInstallGuide(platform, overlay) {
+    var steps;
+    if (platform === "ios") {
+      steps = [
+        "در پایین صفحه Safari، روی دکمه Share (مربع با فلش رو به بالا) بزنید.",
+        "در فهرست باز‌شده، «Add to Home Screen» را پیدا و لمس کنید.",
+        "روی «Add» در بالای صفحه بزنید — آیکون برنامه به صفحه اصلی گوشی اضافه می‌شود."
+      ];
+    } else if (platform === "android") {
+      steps = [
+        "روی آیکون سه‌نقطه (⋮) بالای Chrome بزنید.",
+        "گزینه «Add to Home screen» یا «Install app» را بزنید.",
+        "روی «Install» یا «Add» تأیید بزنید."
+      ];
+    } else {
+      steps = [
+        "در نوار آدرس مرورگر، دنبال آیکون نصب (یک صفحه با علامت +) بگردید.",
+        "روی آن بزنید و «Install» را تأیید کنید."
+      ];
+    }
+    overlay.querySelector("div").innerHTML =
+      '<div style="text-align:center;font-size:30px;margin-bottom:10px;">📲</div>' +
+      '<h3 style="text-align:center;margin:0 0 14px;font-size:15px;color:var(--gold);">مراحل نصب دستی</h3>' +
+      '<ol style="margin:0 0 18px;padding-right:20px;font-size:12.5px;color:var(--muted);line-height:2.1;">' +
+        steps.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") +
+      "</ol>" +
+      '<button class="btn btn-primary btn-block" id="pwaCloseBtn">متوجه شدم</button>';
+    document.getElementById("pwaCloseBtn").addEventListener("click", function () {
+      safeSetLS(LS_PWA_ASKED, true);
+      overlay.remove();
+    });
+  }
+
+  function loadAll() {
+    viewEl.innerHTML = loadingSkeleton();
+    fetchDataFile().catch(function () { return FALLBACK_DATA; }).then(function (seed) {
+      if (!seed || !Array.isArray(seed.prices) || !Array.isArray(seed.products)) throw new Error("bad-shape");
+      return getGoldPrices().catch(function () {
+        // اتصال به API واقعی ممکن نشد (کلید خالی، خطای شبکه، یا CORS)؛
+        // به قیمت نمونه برمی‌گردیم تا برنامه از کار نیفتد.
+        return { meta: seed.meta, prices: seed.prices };
+      }).then(function (priceRes) {
+        DATA = { siteName: seed.siteName, meta: priceRes.meta, prices: priceRes.prices };
+
+        var productsPromise = loadProductsFromFirebase().then(function (list) {
+          FIREBASE_OK = true;
+          return list;
+        }).catch(function () {
+          FIREBASE_OK = false;
+          // فایربیس در دسترس نبود؛ از نسخه محلی ذخیره‌شده یا داده نمونه استفاده کن
+          var stored = safeGetLS(LS_PRODUCTS, null);
+          return (stored && Array.isArray(stored)) ? stored : seed.products.slice();
+        });
+
+        var siteNamePromise = loadSiteNameFromFirebase().catch(function () {
+          return localStorage.getItem(LS_SITE_NAME) || seed.siteName;
+        });
+
+        return Promise.all([productsPromise, siteNamePromise]).then(function (results) {
+          PRODUCTS = results[0];
+          cacheProductsLocally();
+          SITE_NAME = results[1];
+          try { localStorage.setItem(LS_SITE_NAME, SITE_NAME); } catch (e) {}
+          CURRENT_SELLER = safeGetLS(LS_SELLER, null);
+          DATA_ERROR = false;
+          LAST_CHECK = new Date();
+          LAST_CHECK_FAILED = false;
+          render();
+        });
+      });
+    }).catch(function () {
+      DATA_ERROR = true;
+      render();
+    });
+  }
+
+  function refreshPrices() {
+    if (REFRESHING) return;
+    REFRESHING = true;
+    getGoldPrices().then(function (res) {
+      DATA.meta = res.meta;
+      DATA.prices = res.prices;
+      LAST_CHECK = new Date();
+      LAST_CHECK_FAILED = false;
+    }).catch(function () {
+      LAST_CHECK = new Date();
+      LAST_CHECK_FAILED = true;
+    }).then(function () {
+      REFRESHING = false;
+      // فقط وقتی صفحه اصلی خریدار باز است رندر مجدد کن؛ اگر کاربر
+      // مثلاً در حال پرکردن فرم افزودن محصول است، مزاحمش نشو.
+      var current = (location.hash || "#/").split("?")[0];
+      if (current === "#/buyer") render();
+    });
+  }
+
+  var AUTO_REFRESH_MS = 60000; // هر ۶۰ ثانیه؛ در محدوده مجاز پلن رایگان BrsApi
+  setInterval(function () {
+    if (!DATA || DATA_ERROR) return;
+    var current = (location.hash || "#/").split("?")[0];
+    if (current === "#/buyer") refreshPrices();
+  }, AUTO_REFRESH_MS);
+
+  function loadingSkeleton() {
+    return '<div style="padding:16px;"><div class="skeleton" style="height:150px;border-radius:22px;margin-bottom:12px;"></div><div class="skeleton" style="height:60px;border-radius:14px;"></div></div>';
+  }
+
+  function render() {
+    var hash = location.hash || "#/";
+
+    if (DATA_ERROR) {
+      renderTopbar("طلاجات", false, null, false);
+      bottomNavEl.style.display = "none";
+      viewEl.innerHTML = fullErrorState();
+      var retryBtn = document.getElementById("retryBtn");
+      if (retryBtn) retryBtn.addEventListener("click", loadAll);
+      return;
+    }
+    if (!DATA) return;
+
+    var m;
+    if (hash === "#/" || hash === "") {
+      setBottomNav(null, hash);
+      renderRoleSelect();
+    } else if (hash === "#/buyer") {
+      setBottomNav("buyer", hash);
+      renderBuyerHome();
+    } else if (hash.indexOf("#/buyer/products") === 0) {
+      setBottomNav("buyer", hash);
+      renderBuyerProducts(hash);
+    } else if ((m = hash.match(/^#\/buyer\/product\/([^/]+)$/))) {
+      setBottomNav("buyer", hash);
+      renderProductDetail(decodeURIComponent(m[1]));
+    } else if (hash === "#/seller") {
+      setBottomNav("seller", hash);
+      renderSellerHome();
+    } else if (hash === "#/seller/add") {
+      setBottomNav("seller", hash);
+      renderSellerAdd();
+    } else if ((m = hash.match(/^#\/seller\/edit\/([^/]+)$/))) {
+      setBottomNav("seller", hash);
+      renderSellerEdit(decodeURIComponent(m[1]));
+    } else if (hash === "#/seller/settings") {
+      setBottomNav("seller", hash);
+      renderSellerSettings();
+    } else {
+      setBottomNav(null, hash);
+      renderNotFound();
+    }
+    window.scrollTo(0, 0);
+  }
+
+  function setBottomNav(section, currentHash) {
+    if (!section) {
+      bottomNavEl.style.display = "none";
+      bottomNavEl.innerHTML = "";
+      return;
+    }
+    bottomNavEl.style.display = "flex";
+    var items;
+    if (section === "buyer") {
+      items = [
+        { route: "#/buyer", icon: "🏠", label: "خانه" },
+        { route: "#/buyer/products", icon: "💍", label: "محصولات" },
+        { route: "#/", icon: "🔀", label: "تغییر پنل" }
+      ];
+    } else {
+      items = [
+        { route: "#/seller", icon: "📦", label: "محصولات من" },
+        { route: "#/seller/add", icon: "➕", label: "افزودن" },
+        { route: "#/seller/settings", icon: "⚙️", label: "تنظیمات" },
+        { route: "#/", icon: "🔀", label: "تغییر پنل" }
+      ];
+    }
+    var current = currentHash.split("?")[0];
+    bottomNavEl.innerHTML = items.map(function (it) {
+      var active = it.route === current || (it.route !== "#/" && current.indexOf(it.route) === 0);
+      return '<button class="nav-btn' + (active ? " active" : "") + '" data-route="' + it.route + '"><span class="nic">' + it.icon + "</span>" + it.label + "</button>";
+    }).join("");
+    bottomNavEl.querySelectorAll(".nav-btn").forEach(function (b) {
+      b.addEventListener("click", function () { navigate(b.getAttribute("data-route")); });
+    });
+  }
+
+  /* ---------------- Topbar ---------------- */
+
+  function renderTopbar(title, showBack, backHash, showSwitch) {
+    var html = "";
+    if (showBack) {
+      html += '<button class="back-btn" id="backBtn" aria-label="بازگشت">→</button><h1>' + esc(title) + "</h1>";
+    } else {
+      html += '<div class="brand-mark"><span class="dot"></span>' + esc(title) + "</div>";
+    }
+    if (showSwitch) html += '<button class="switch-btn" id="switchBtn">تغییر پنل</button>';
+    topbarEl.innerHTML = html;
+    if (showBack) {
+      document.getElementById("backBtn").addEventListener("click", function () {
+        if (backHash) navigate(backHash); else history.back();
+      });
+    }
+    if (showSwitch) document.getElementById("switchBtn").addEventListener("click", function () { navigate("#/"); });
+  }
+
+  function fullErrorState() {
+    return '<div class="state-msg"><span class="big-ic">⚠️</span>در حال حاضر دریافت اطلاعات امکان‌پذیر نیست. لطفاً دوباره تلاش کنید.<br><button class="btn btn-primary" style="margin-top:14px;display:inline-flex;max-width:170px;" id="retryBtn">تلاش دوباره</button></div>';
+  }
+  function renderNotFound() {
+    renderTopbar("یافت نشد", true, "#/", false);
+    viewEl.innerHTML = '<div class="state-msg"><span class="big-ic">🔍</span>صفحه موردنظر پیدا نشد.</div>';
+  }
+
+  /* ---------------- Role select ---------------- */
+
+  function renderRoleSelect() {
+    renderTopbar(SITE_NAME, false, null, false);
+    viewEl.innerHTML =
+      '<div class="role-wrap">' +
+        '<div class="role-hero"><h1>' + esc(SITE_NAME) + "</h1><p>قیمت روز طلا و محصولات فروشندگان را ببینید، یا اگر فروشنده هستید محصولات خودتان را ثبت کنید.</p></div>" +
+        '<div class="role-card" data-route="#/buyer"><div class="r-ic">🛍️</div><div class="r-info"><h3>ورود به‌عنوان خریدار</h3><p>مشاهده قیمت طلا، محصولات و اطلاعات فروشندگان</p></div></div>' +
+        '<div class="role-card" data-route="#/seller"><div class="r-ic">🏪</div><div class="r-info"><h3>ورود به‌عنوان فروشنده</h3><p>افزودن، ویرایش و مدیریت محصولات خودتان</p></div></div>' +
+      "</div>";
+    viewEl.querySelectorAll("[data-route]").forEach(function (el) {
+      el.addEventListener("click", function () { navigate(el.getAttribute("data-route")); });
+    });
+  }
+
+  /* ---------------- Buyer: home ---------------- */
+
+  function productThumbHTML(p, sizeClass) {
+    if (p.image) return '<img src="' + p.image + '" alt="' + esc(p.name) + '">';
+    return esc(p.icon || "💍");
+  }
+
+  function productCardHTML(p) {
+    return (
+      '<div class="prod-card" data-id="' + esc(p.id) + '">' +
+        '<div class="prod-thumb">' + productThumbHTML(p) + "</div>" +
+        '<div class="prod-body">' +
+          '<div class="p-name">' + esc(p.name) + "</div>" +
+          '<div class="p-meta">' + esc(p.weight) + " گرم · عیار " + esc(p.karat) + "</div>" +
+          '<div class="p-price">' + esc(formatToman(p.price)) + " تومان</div>" +
+        "</div>" +
+      "</div>"
+    );
+  }
+
+  function attachProductCardHandlers(container) {
+    container.querySelectorAll(".prod-card[data-id]").forEach(function (card) {
+      card.addEventListener("click", function () {
+        navigate("#/buyer/product/" + encodeURIComponent(card.getAttribute("data-id")));
+      });
+    });
+  }
+
+  function renderBuyerHome() {
+    renderTopbar(SITE_NAME, false, null, true);
+    var g18 = findPrice("gold18");
+    var others = DATA.prices.filter(function (p) { return p.id !== "gold18"; });
+    var latest = PRODUCTS.slice(0, 4);
+
+    var html = "";
+    if (g18) {
+      html +=
+        '<div class="price-hero"><div class="price-hero-top">' +
+          '<div><div class="price-hero-title">' + esc(g18.title) + " (هر " + esc(g18.unit) + ")</div>" +
+          '<div class="price-hero-amount">' + esc(formatToman(g18.price)) + ' <span class="u">تومان</span></div>' +
+          changeChipHTML(g18) + "</div>" +
+          '<div class="stamp" style="width:52px;height:52px;"><span style="font-size:12px;">' + esc(g18.stamp) + "</span></div>" +
+        "</div>" +
+        '<div class="price-hero-meta">آخرین به‌روزرسانی قیمت: ' + esc(DATA.meta.lastUpdated) + "<br>" +
+        '<span style="display:inline-flex;align-items:center;gap:5px;margin-top:4px;">' +
+          '<span style="width:6px;height:6px;border-radius:50%;background:var(--up);display:inline-block;' + (REFRESHING ? "animation:pulse 1s infinite;" : "") + '"></span>' +
+          "بررسی خودکار هر ۶۰ ثانیه — آخرین بررسی: " + esc(LAST_CHECK ? LAST_CHECK.toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) : "-") +
+        "</span></div></div>";
+    }
+    html += '<div class="mock-banner">⚠️ ' + esc(DATA.meta.sourceLabel) + "</div>";
+    if (FIREBASE_OK === false) {
+      html += '<div class="mock-banner" style="border-color:rgba(224,104,95,.4);color:var(--down);">⚠️ اتصال به فایربیس برقرار نشد؛ محصولاتی که می‌بینید ممکن است قدیمی باشند.</div>';
+    }
+    html += '<div class="mini-strip">' + others.map(function (p) {
+      var isUp = p.change >= 0;
+      var cur = p.unitCurrency || "تومان";
+      return '<div class="mini-card"><div class="mc-title">' + esc(p.title) + '</div><div class="mc-amount">' + esc(formatToman(p.price)) + ' <span style="font-size:10px;color:var(--muted);">' + esc(cur) + '</span></div><div class="mc-change" style="color:' + (isUp ? "var(--up)" : "var(--down)") + '">' + (isUp ? "▲" : "▼") + " " + esc(Math.abs(p.changePercent).toFixed(2)) + "٪</div></div>";
+    }).join("") + "</div>";
+
+    html += '<div class="search-wrap"><div class="search-box" id="homeSearchBox"><span>🔎</span><input type="text" id="homeSearchInput" placeholder="جست‌وجوی محصول طلا..."></div></div>';
+
+    html += '<div class="section-head"><h3>جدیدترین محصولات طلا</h3><a id="seeAllLink">مشاهده همه ←</a></div>';
+    if (!latest.length) {
+      html += '<div class="state-msg"><span class="big-ic">💍</span>هنوز محصولی ثبت نشده است.</div>';
+    } else {
+      html += '<div class="prod-grid">' + latest.map(productCardHTML).join("") + "</div>";
+    }
+
+    viewEl.innerHTML = html;
+    attachProductCardHandlers(viewEl);
+    document.getElementById("seeAllLink").addEventListener("click", function () { navigate("#/buyer/products"); });
+    var input = document.getElementById("homeSearchInput");
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && input.value.trim()) navigate("#/buyer/products?q=" + encodeURIComponent(input.value.trim()));
+    });
+  }
+
+  /* ---------------- Buyer: products list ---------------- */
+
+  function parseQuery(hash) {
+    var qi = hash.indexOf("?"), params = {};
+    if (qi === -1) return params;
+    hash.substring(qi + 1).split("&").forEach(function (pair) {
+      if (!pair) return;
+      var parts = pair.split("=");
+      params[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || "");
+    });
+    return params;
+  }
+
+  function renderBuyerProducts(hash) {
+    renderTopbar("محصولات طلا", true, "#/buyer", true);
+    var params = parseQuery(hash);
+    var html =
+      '<div class="search-wrap"><div class="search-box"><span>🔎</span><input type="text" id="listSearchInput" value="' + esc(params.q || "") + '" placeholder="جست‌وجوی محصول..."></div></div>' +
+      '<div id="listResults"></div>';
+    viewEl.innerHTML = html;
+
+    function apply() {
+      var q = document.getElementById("listSearchInput").value.trim().toLowerCase();
+      var results = PRODUCTS.filter(function (p) { return !q || p.name.toLowerCase().indexOf(q) !== -1; });
+      var el = document.getElementById("listResults");
+      if (!results.length) {
+        el.innerHTML = '<div class="state-msg"><span class="big-ic">🙁</span>محصولی با این مشخصات پیدا نشد.</div>';
+      } else {
+        el.innerHTML = '<div class="prod-grid">' + results.map(productCardHTML).join("") + "</div>";
+        attachProductCardHandlers(el);
+      }
+    }
+    var t;
+    document.getElementById("listSearchInput").addEventListener("input", function () {
+      clearTimeout(t); t = setTimeout(apply, 150);
+    });
+    apply();
+  }
+
+  /* ---------------- Buyer: product detail ---------------- */
+
+  function renderProductDetail(id) {
+    var p = findProduct(id);
+    if (!p) {
+      renderTopbar("یافت نشد", true, "#/buyer/products", true);
+      viewEl.innerHTML = '<div class="state-msg"><span class="big-ic">🔍</span>این محصول پیدا نشد. ممکن است حذف شده باشد.</div>';
+      return;
+    }
+    renderTopbar(p.name, true, "#/buyer/products", true);
+    var phoneDigits = digitsOnly(p.sellerPhone || "");
+    var comments = p.comments || [];
+    var commentsHTML = comments.length
+      ? comments.map(function (c) {
+          var stars = ""; for (var i = 0; i < 5; i++) stars += i < Math.round(c.rating) ? "★" : "☆";
+          return '<div class="comment-item"><div class="comment-head"><span class="comment-author">' + esc(c.author) + '</span><span class="comment-date">' + esc(c.date) + '</span></div><div class="comment-stars">' + stars + '</div><p class="comment-text">' + esc(c.text) + "</p></div>";
+        }).join("")
+      : '<p style="font-size:12px;color:var(--muted);">هنوز نظری ثبت نشده است.</p>';
+
+    var html =
+      '<div class="detail-img">' + productThumbHTML(p) + "</div>" +
+      '<div class="detail-body"><h2>' + esc(p.name) + "</h2>" +
+      '<div class="detail-price">' + esc(formatToman(p.price)) + " تومان</div>" +
+      '<div class="detail-meta">وزن ' + esc(p.weight) + " گرم · عیار " + esc(p.karat) + "</div></div>" +
+      '<div class="block"><h4>توضیحات</h4><p>' + esc(p.description || "توضیحی ثبت نشده است.") + "</p></div>" +
+      '<div class="block"><h4>فروشنده و ارتباط</h4>' +
+        '<a class="contact-row" href="tel:' + esc(phoneDigits) + '"><span class="ic">📞</span><span><strong>' + esc(p.sellerName) + '</strong><small>تماس: ' + esc(p.sellerPhone) + "</small></span></a>" +
+        '<a class="contact-row" href="sms:' + esc(phoneDigits) + '"><span class="ic">✉️</span><span><strong>ارسال پیامک</strong><small>' + esc(p.sellerPhone) + "</small></span></a>" +
+        (p.sellerAddress ? '<div class="contact-row"><span class="ic">📍</span><span><strong>آدرس</strong><small>' + esc(p.sellerAddress) + "</small></span></div>" : "") +
+      "</div>" +
+      '<div class="block"><h4>نظرات مشتریان</h4>' + commentsHTML + "</div>";
+    viewEl.innerHTML = html;
+  }
+
+  /* ---------------- Seller: identify / dashboard ---------------- */
+
+  function renderSellerHome() {
+    if (!CURRENT_SELLER) {
+      renderTopbar("ورود فروشنده", false, null, true);
+      viewEl.innerHTML =
+        '<div class="form-card">' +
+          '<p style="font-size:12.5px;color:var(--muted);line-height:1.9;margin:0 0 16px;">برای مدیریت محصولات، مشخصات فروشگاه یا فروشنده خود را وارد کنید. این اطلاعات فقط روی همین دستگاه ذخیره می‌شود.</p>' +
+          '<div class="field"><label for="sName">نام فروشگاه / فروشنده</label><input type="text" id="sName" placeholder="مثلاً طلافروشی درخشان"><div class="field-error" id="sNameErr" style="display:none;"></div></div>' +
+          '<div class="field"><label for="sPhone">شماره تماس</label><input type="tel" id="sPhone" placeholder="09xxxxxxxxx" inputmode="tel"><div class="field-error" id="sPhoneErr" style="display:none;"></div></div>' +
+          '<div class="field"><label for="sAddr">آدرس (اختیاری)</label><input type="text" id="sAddr" placeholder="آدرس فروشگاه"></div>' +
+          '<button class="btn btn-primary btn-block" id="sellerStartBtn">ورود / شروع</button>' +
+        "</div>";
+      document.getElementById("sellerStartBtn").addEventListener("click", function () {
+        var name = document.getElementById("sName").value.trim();
+        var phone = document.getElementById("sPhone").value.trim();
+        var addr = document.getElementById("sAddr").value.trim();
+        var ok = true;
+        document.getElementById("sNameErr").style.display = "none";
+        document.getElementById("sPhoneErr").style.display = "none";
+        if (!name) { document.getElementById("sNameErr").textContent = "وارد کردن نام الزامی است."; document.getElementById("sNameErr").style.display = "block"; ok = false; }
+        var phoneDigits = digitsOnly(phone);
+        if (phoneDigits.length < 8) { document.getElementById("sPhoneErr").textContent = "شماره تماس معتبر وارد کنید."; document.getElementById("sPhoneErr").style.display = "block"; ok = false; }
+        if (!ok) return;
+        saveSeller({ id: "seller-" + phoneDigits, name: name, phone: phone, address: addr });
+        render();
+      });
+      return;
+    }
+
+    renderTopbar("محصولات من", false, null, true);
+    var mine = PRODUCTS.filter(function (p) { return p.sellerId === CURRENT_SELLER.id; });
+
+    var html = "";
+    if (FIREBASE_OK === false) {
+      html += '<div class="mock-banner" style="margin-top:16px;border-color:rgba(224,104,95,.4);color:var(--down);">⚠️ اتصال به فایربیس برقرار نیست — افزودن یا ویرایش محصول الان کار نمی‌کند تا اینترنت وصل شود.</div>';
+    }
+    html +=
+      '<div class="seller-id-card"><div class="s-ic">🏪</div><div class="s-info"><strong>' + esc(CURRENT_SELLER.name) + "</strong><small>" + esc(CURRENT_SELLER.phone) + '</small></div><button class="switch-btn" id="logoutBtn">خروج</button></div>' +
+      '<div class="action-row" style="margin-top:14px;"><button class="btn btn-primary" id="addProdBtn">➕ افزودن محصول جدید</button></div>' +
+      '<div class="section-head"><h3>محصولات من (' + mine.length + ')</h3></div>';
+
+    if (!mine.length) {
+      html += '<div class="state-msg"><span class="big-ic">📦</span>هنوز محصولی ثبت نکرده‌اید.</div>';
+    } else {
+      html += mine.map(function (p) {
+        return (
+          '<div class="myprod-row">' +
+            '<div class="mp-thumb">' + productThumbHTML(p) + "</div>" +
+            '<div class="mp-info"><div class="mp-name">' + esc(p.name) + '</div><div class="mp-price">' + esc(formatToman(p.price)) + " تومان</div></div>" +
+            '<div class="mp-actions">' +
+              '<button class="icon-btn" data-edit="' + esc(p.id) + '" aria-label="ویرایش">✏️</button>' +
+              '<button class="icon-btn danger" data-del="' + esc(p.id) + '" aria-label="حذف">🗑️</button>' +
+            "</div>" +
+          "</div>"
+        );
+      }).join("");
+    }
+
+    viewEl.innerHTML = html;
+    document.getElementById("logoutBtn").addEventListener("click", function () { logoutSeller(); render(); });
+    document.getElementById("addProdBtn").addEventListener("click", function () { navigate("#/seller/add"); });
+    viewEl.querySelectorAll("[data-edit]").forEach(function (b) {
+      b.addEventListener("click", function () { navigate("#/seller/edit/" + encodeURIComponent(b.getAttribute("data-edit"))); });
+    });
+    viewEl.querySelectorAll("[data-del]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var id = b.getAttribute("data-del");
+        var p = findProduct(id);
+        if (!p || !confirm('محصول «' + p.name + '» حذف شود؟ این کار قابل بازگشت نیست.')) return;
+        b.disabled = true;
+        b.textContent = "…";
+        deleteProduct(id).then(function () {
+          toast("محصول حذف شد.");
+          render();
+        }).catch(function (err) {
+          b.disabled = false;
+          b.textContent = "🗑️";
+          toast(fbErrorMessage(err));
+        });
+      });
+    });
+  }
+
+  /* ---------------- Seller: add / edit product form ---------------- */
+
+  // عکس‌های واقعی موبایل معمولاً چند مگابایت هستند و مستقیم در
+  // localStorage جا نمی‌شوند؛ پیش از ذخیره، سمت مرورگر (با canvas)
+  // کوچک و فشرده می‌شوند تا مطمئن شویم واقعاً ذخیره می‌شوند.
+  function compressImageFile(file, maxDim, quality, onDone, onError) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var img = new Image();
+      img.onload = function () {
+        var w = img.width, h = img.height;
+        if (w > h && w > maxDim) { h = Math.round(h * (maxDim / w)); w = maxDim; }
+        else if (h > maxDim) { w = Math.round(w * (maxDim / h)); h = maxDim; }
+        var canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, w, h);
+        try {
+          onDone(canvas.toDataURL("image/jpeg", quality));
+        } catch (e) { onError(); }
+      };
+      img.onerror = onError;
+      img.src = reader.result;
+    };
+    reader.onerror = onError;
+    reader.readAsDataURL(file);
+  }
+
+  function wireUploadBox(existingImage) {
+    PENDING_IMAGE = existingImage || null;
+    var input = document.getElementById("imgInput");
+    var preview = document.getElementById("imgPreview");
+    var err = document.getElementById("imgErr");
+    input.addEventListener("change", function () {
+      err.style.display = "none";
+      var file = input.files && input.files[0];
+      if (!file) return;
+      if (file.type.indexOf("image/") !== 0) {
+        err.textContent = "لطفاً یک فایل تصویری انتخاب کنید.";
+        err.style.display = "block";
+        return;
+      }
+      if (file.size > 12 * 1024 * 1024) {
+        err.textContent = "حجم فایل خیلی زیاد است؛ لطفاً عکسی کمتر از ۱۲ مگابایت انتخاب کنید.";
+        err.style.display = "block";
+        return;
+      }
+      preview.innerHTML = '<div style="font-size:11px;color:var(--muted);">در حال آماده‌سازی عکس...</div>';
+      compressUntilSmallEnough(file, function (dataUrl) {
+        PENDING_IMAGE = dataUrl;
+        preview.innerHTML = '<img src="' + PENDING_IMAGE + '" alt="پیش‌نمایش">';
+      }, function () {
+        err.textContent = "پردازش عکس با خطا مواجه شد. لطفاً عکس دیگری امتحان کنید.";
+        err.style.display = "block";
+        preview.innerHTML = "🖼️";
+      });
+    });
+  }
+
+  // برای اطمینان از این‌که عکس فشرده‌شده همیشه با فاصله امن زیر سقف
+  // ۱ مگابایتیِ هر سند Firestore بماند، اگر بار اول هنوز بزرگ بود
+  // (مثلاً عکس خیلی شلوغ/پرجزئیات)، با کیفیت کمتر دوباره امتحان می‌کند.
+  function compressUntilSmallEnough(file, onDone, onError) {
+    var MAX_BYTES = 700 * 1024; // آستانه امن (Firestore تا ۱MB اجازه می‌دهد)
+    var attempts = [
+      { maxDim: 900, quality: 0.72 },
+      { maxDim: 700, quality: 0.6 },
+      { maxDim: 500, quality: 0.5 }
+    ];
+    function tryAttempt(i) {
+      if (i >= attempts.length) { onError(); return; }
+      compressImageFile(file, attempts[i].maxDim, attempts[i].quality, function (dataUrl) {
+        var approxBytes = dataUrl.length * 0.75; // تخمین حجم واقعی از روی طول Base64
+        if (approxBytes <= MAX_BYTES || i === attempts.length - 1) {
+          onDone(dataUrl);
+        } else {
+          tryAttempt(i + 1);
+        }
+      }, onError);
+    }
+    tryAttempt(0);
+  }
+
+  function pricePerGramForKarat(karat) {
+    var g24 = findPrice("gold24");
+    if (!karat) return 0;
+    // برای عیار ۱۸ و ۲۴، از نرخ واقعی همان عیار (مستقیم از API) استفاده کن،
+    // نه محاسبه تناسبی — تا دقیقاً همان عددی باشد که در صفحه اصلی دیده می‌شود.
+    if (karat === 18 || karat === 18.0) {
+      var g18 = findPrice("gold18");
+      if (g18) return g18.price;
+    }
+    if (karat === 24 || karat === 24.0) {
+      if (g24) return g24.price;
+    }
+    // برای بقیه عیارها (مثلاً ۲۱)، چون نرخ مستقیمی از API نداریم،
+    // متناسب با نرخ طلای ۲۴ عیار محاسبه می‌شود.
+    if (!g24) return 0;
+    return (g24.price / 24) * karat;
+  }
+
+  function computeProductPrice(weight, karat, ojratPercent, profitPercent, taxPercent) {
+    var perGram = pricePerGramForKarat(karat);
+    var basePrice = weight * perGram;
+    var ojratAmount = basePrice * ((ojratPercent || 0) / 100);
+    var subtotal1 = basePrice + ojratAmount; // پایه + اجرت
+    var profitAmount = subtotal1 * ((profitPercent || 0) / 100);
+    var subtotal2 = subtotal1 + profitAmount; // پایه + اجرت + سود
+    var taxAmount = subtotal2 * ((taxPercent || 0) / 100);
+    var total = subtotal2 + taxAmount;
+    return {
+      perGram: perGram, basePrice: basePrice, ojratAmount: ojratAmount,
+      profitAmount: profitAmount, taxAmount: taxAmount, total: total
+    };
+  }
+
+  function updatePriceCalcBox() {
+    var box = document.getElementById("priceCalcBox");
+    if (!box) return;
+    var weight = parseNum(document.getElementById("pWeight").value);
+    var karat = parseNum(document.getElementById("pKarat").value);
+    var ojratPercent = parseNum(document.getElementById("pOjrat").value);
+    var profitPercent = parseNum(document.getElementById("pProfit").value);
+    var taxPercent = parseNum(document.getElementById("pTax").value);
+    if (isNaN(ojratPercent)) ojratPercent = 0;
+    if (isNaN(profitPercent)) profitPercent = 0;
+    if (isNaN(taxPercent)) taxPercent = 0;
+    if (isNaN(weight) || weight <= 0 || isNaN(karat) || karat <= 0) {
+      box.innerHTML = '<div class="cr-label">وزن و عیار را وارد کنید تا قیمت محاسبه شود</div><div class="cr-amount">۰ <span class="u">تومان</span></div>';
+      return;
+    }
+    var r = computeProductPrice(weight, karat, ojratPercent, profitPercent, taxPercent);
+    box.innerHTML =
+      '<div class="cr-label">قیمت پایه طلا (' + esc(weight) + ' گرم × نرخ عیار ' + esc(karat) + ')</div>' +
+      '<div style="font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:6px;">' + esc(formatToman(r.basePrice)) + ' تومان</div>' +
+      '<div class="cr-label">اجرت ساخت (' + esc(ojratPercent) + '٪ از قیمت پایه)</div>' +
+      '<div style="font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:6px;">' + esc(formatToman(r.ojratAmount)) + ' تومان</div>' +
+      '<div class="cr-label">سود (' + esc(profitPercent) + '٪ از پایه+اجرت)</div>' +
+      '<div style="font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:6px;">' + esc(formatToman(r.profitAmount)) + ' تومان</div>' +
+      '<div class="cr-label">مالیات (' + esc(taxPercent) + '٪ از پایه+اجرت+سود)</div>' +
+      '<div style="font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:10px;">' + esc(formatToman(r.taxAmount)) + ' تومان</div>' +
+      '<div class="cr-label">قیمت نهایی محصول</div>' +
+      '<div class="cr-amount">' + esc(formatToman(r.total)) + ' <span class="u">تومان</span></div>';
+  }
+
+  function wireCalcLive() {
+    ["pWeight", "pKarat", "pOjrat", "pProfit", "pTax"].forEach(function (id) {
+      document.getElementById(id).addEventListener("input", updatePriceCalcBox);
+    });
+    updatePriceCalcBox();
+  }
+
+  function productFormHTML(p) {
+    var name = p ? p.name : "";
+    var weight = p ? p.weight : "";
+    var karat = p ? p.karat : "";
+    var ojrat = p ? (p.ojratPercent || 0) : 0;
+    var profitPercent = p ? (p.profitPercent || 0) : 0;
+    var taxPercent = p ? (p.taxPercent || 0) : 0;
+    var desc = p ? p.description : "";
+    var contact = p ? p.sellerPhone : (CURRENT_SELLER ? CURRENT_SELLER.phone : "");
+    var previewInner = p && p.image ? '<img src="' + p.image + '" alt="پیش‌نمایش">' : (p ? esc(p.icon || "💍") : "🖼️");
+    var g24 = findPrice("gold24");
+
+    return (
+      '<div class="form-card">' +
+        '<div class="field"><label>عکس محصول</label>' +
+          '<div class="upload-box">' +
+            '<div class="upload-preview" id="imgPreview">' + previewInner + "</div>" +
+            '<div class="u-label">انتخاب عکس از دستگاه</div><div class="u-sub">حداکثر ۳ مگابایت</div>' +
+            '<input type="file" id="imgInput" accept="image/*">' +
+          "</div>" +
+          '<div class="field-error" id="imgErr" style="display:none;"></div>' +
+        "</div>" +
+        '<div class="field"><label for="pName">نام محصول</label><input type="text" id="pName" value="' + esc(name) + '" placeholder="مثلاً گردنبند طلا طرح برگ"><div class="field-error" id="pNameErr" style="display:none;"></div></div>' +
+        '<div class="field"><label for="pWeight">وزن (گرم)</label><input type="text" inputmode="decimal" id="pWeight" value="' + esc(weight) + '" placeholder="مثلاً 6.2"><div class="field-error" id="pWeightErr" style="display:none;"></div></div>' +
+        '<div class="field"><label for="pKarat">عیار</label><input type="text" inputmode="decimal" id="pKarat" value="' + esc(karat) + '" placeholder="مثلاً 18">' +
+          '<div class="field-hint">' + (g24 ? "نرخ لحظه‌ای طلای ۲۴ عیار: " + esc(formatToman(g24.price)) + " تومان — قیمت هر عیار متناسب با این نرخ محاسبه می‌شود." : "") + "</div>" +
+          '<div class="field-error" id="pKaratErr" style="display:none;"></div></div>' +
+        '<div class="field"><label for="pOjrat">اجرت ساخت (درصد)</label><input type="text" inputmode="decimal" id="pOjrat" value="' + esc(ojrat) + '" placeholder="مثلاً 7">' +
+          '<div class="field-hint">روی قیمت پایه طلا محاسبه می‌شود. اگر اجرت ندارد، صفر بگذارید.</div>' +
+          '<div class="field-error" id="pOjratErr" style="display:none;"></div></div>' +
+        '<div class="field"><label for="pProfit">سود (درصد)</label><input type="text" inputmode="decimal" id="pProfit" value="' + esc(profitPercent) + '" placeholder="مثلاً 7">' +
+          '<div class="field-hint">روی مجموع قیمت پایه و اجرت محاسبه می‌شود. اگر سود ندارید، صفر بگذارید.</div>' +
+          '<div class="field-error" id="pProfitErr" style="display:none;"></div></div>' +
+        '<div class="field"><label for="pTax">مالیات (درصد)</label><input type="text" inputmode="decimal" id="pTax" value="' + esc(taxPercent) + '" placeholder="مثلاً 9">' +
+          '<div class="field-hint">روی مجموع قیمت پایه، اجرت و سود محاسبه می‌شود. اگر مالیات ندارید، صفر بگذارید.</div>' +
+          '<div class="field-error" id="pTaxErr" style="display:none;"></div></div>' +
+        '<div class="calc-result" id="priceCalcBox" style="margin-bottom:14px;"></div>' +
+        '<div class="field"><label for="pDesc">توضیحات</label><textarea id="pDesc" placeholder="توضیح کوتاهی درباره محصول...">' + esc(desc) + "</textarea></div>" +
+        '<div class="field"><label for="pContact">شماره تماس فروشنده</label><input type="tel" id="pContact" value="' + esc(contact) + '" placeholder="09xxxxxxxxx"><div class="field-error" id="pContactErr" style="display:none;"></div></div>' +
+      "</div>"
+    );
+  }
+
+  function readProductForm() {
+    var errs = {};
+    var name = document.getElementById("pName").value.trim();
+    var weight = parseNum(document.getElementById("pWeight").value);
+    var karat = parseNum(document.getElementById("pKarat").value);
+    var ojrat = parseNum(document.getElementById("pOjrat").value);
+    var profitPercent = parseNum(document.getElementById("pProfit").value);
+    var taxPercent = parseNum(document.getElementById("pTax").value);
+    var contact = document.getElementById("pContact").value.trim();
+    var desc = document.getElementById("pDesc").value.trim();
+
+    ["pNameErr", "pWeightErr", "pKaratErr", "pOjratErr", "pProfitErr", "pTaxErr", "pContactErr"].forEach(function (id) {
+      var el = document.getElementById(id); el.style.display = "none";
+    });
+
+    if (!name) { errs.name = "وارد کردن نام محصول الزامی است."; }
+    if (isNaN(weight) || weight <= 0) { errs.weight = "وزن باید عددی بزرگ‌تر از صفر باشد."; }
+    if (isNaN(karat) || karat <= 0 || karat > 24) { errs.karat = "عیار باید عددی بین ۱ تا ۲۴ باشد."; }
+    if (isNaN(ojrat) || ojrat < 0 || ojrat > 100) { errs.ojrat = "اجرت باید عددی بین ۰ تا ۱۰۰ درصد باشد."; }
+    if (isNaN(profitPercent) || profitPercent < 0 || profitPercent > 100) { errs.profit = "سود باید عددی بین ۰ تا ۱۰۰ درصد باشد."; }
+    if (isNaN(taxPercent) || taxPercent < 0 || taxPercent > 100) { errs.tax = "مالیات باید عددی بین ۰ تا ۱۰۰ درصد باشد."; }
+    var contactDigits = digitsOnly(contact);
+    if (contactDigits.length < 8) { errs.contact = "شماره تماس معتبر وارد کنید."; }
+
+    if (errs.name) { document.getElementById("pNameErr").textContent = errs.name; document.getElementById("pNameErr").style.display = "block"; }
+    if (errs.weight) { document.getElementById("pWeightErr").textContent = errs.weight; document.getElementById("pWeightErr").style.display = "block"; }
+    if (errs.karat) { document.getElementById("pKaratErr").textContent = errs.karat; document.getElementById("pKaratErr").style.display = "block"; }
+    if (errs.ojrat) { document.getElementById("pOjratErr").textContent = errs.ojrat; document.getElementById("pOjratErr").style.display = "block"; }
+    if (errs.profit) { document.getElementById("pProfitErr").textContent = errs.profit; document.getElementById("pProfitErr").style.display = "block"; }
+    if (errs.tax) { document.getElementById("pTaxErr").textContent = errs.tax; document.getElementById("pTaxErr").style.display = "block"; }
+    if (errs.contact) { document.getElementById("pContactErr").textContent = errs.contact; document.getElementById("pContactErr").style.display = "block"; }
+
+    if (Object.keys(errs).length) return null;
+    var calc = computeProductPrice(weight, karat, ojrat, profitPercent, taxPercent);
+    return {
+      name: name, price: calc.total, weight: weight, karat: karat, ojratPercent: ojrat,
+      profitPercent: profitPercent, taxPercent: taxPercent, description: desc, sellerPhone: contact
+    };
+  }
+
+  function renderSellerAdd() {
+    if (!CURRENT_SELLER) { navigate("#/seller"); return; }
+    renderTopbar("افزودن محصول", true, "#/seller", false);
+    viewEl.innerHTML = productFormHTML(null) + '<div class="action-row"><button class="btn btn-primary btn-block" id="saveBtn">ثبت محصول</button></div>';
+    wireUploadBox(null);
+    wireCalcLive();
+    document.getElementById("saveBtn").addEventListener("click", function () {
+      var data = readProductForm();
+      if (!data) return;
+      var btn = document.getElementById("saveBtn");
+      btn.disabled = true;
+      btn.textContent = "در حال ذخیره روی فایربیس...";
+      addProduct({
+        name: data.name, price: data.price, weight: data.weight, karat: data.karat, ojratPercent: data.ojratPercent, profitPercent: data.profitPercent, taxPercent: data.taxPercent,
+        description: data.description, image: PENDING_IMAGE, icon: "💍",
+        sellerId: CURRENT_SELLER.id, sellerName: CURRENT_SELLER.name,
+        sellerPhone: data.sellerPhone, sellerAddress: CURRENT_SELLER.address || ""
+      }).then(function () {
+        toast("محصول با موفقیت روی فایربیس ثبت شد.");
+        navigate("#/seller");
+      }).catch(function (err) {
+        btn.disabled = false;
+        btn.textContent = "ثبت محصول";
+        toast(fbErrorMessage(err));
+      });
+    });
+  }
+
+  function renderSellerEdit(id) {
+    if (!CURRENT_SELLER) { navigate("#/seller"); return; }
+    var p = findProduct(id);
+    if (!p || p.sellerId !== CURRENT_SELLER.id) {
+      renderTopbar("دسترسی مجاز نیست", true, "#/seller", false);
+      viewEl.innerHTML = '<div class="state-msg"><span class="big-ic">🚫</span>این محصول متعلق به شما نیست یا پیدا نشد.</div>';
+      return;
+    }
+    renderTopbar("ویرایش محصول", true, "#/seller", false);
+    viewEl.innerHTML =
+      productFormHTML(p) +
+      '<div class="action-row"><button class="btn btn-primary" id="saveBtn">ذخیره تغییرات</button><button class="btn btn-danger" id="delBtn">حذف محصول</button></div>';
+    wireUploadBox(p.image);
+    wireCalcLive();
+    document.getElementById("saveBtn").addEventListener("click", function () {
+      var data = readProductForm();
+      if (!data) return;
+      var btn = document.getElementById("saveBtn");
+      btn.disabled = true;
+      btn.textContent = "در حال ذخیره...";
+      var patch = {
+        name: data.name, price: data.price, weight: data.weight, karat: data.karat, ojratPercent: data.ojratPercent, profitPercent: data.profitPercent, taxPercent: data.taxPercent,
+        description: data.description, sellerPhone: data.sellerPhone
+      };
+      // فقط اگر عکس جدیدی انتخاب شده، آن را در تغییرات بگنجان (وگرنه عکس قبلی دست‌نخورده می‌ماند)
+      if (PENDING_IMAGE !== p.image) patch.image = PENDING_IMAGE;
+      updateProduct(id, patch).then(function () {
+        toast("تغییرات ذخیره شد.");
+        navigate("#/seller");
+      }).catch(function (err) {
+        btn.disabled = false;
+        btn.textContent = "ذخیره تغییرات";
+        toast(fbErrorMessage(err));
+      });
+    });
+    document.getElementById("delBtn").addEventListener("click", function () {
+      if (!confirm('محصول «' + p.name + '» حذف شود؟ این کار قابل بازگشت نیست.')) return;
+      var delBtn = document.getElementById("delBtn");
+      delBtn.disabled = true;
+      delBtn.textContent = "در حال حذف...";
+      deleteProduct(id).then(function () {
+        toast("محصول حذف شد.");
+        navigate("#/seller");
+      }).catch(function (err) {
+        delBtn.disabled = false;
+        delBtn.textContent = "حذف محصول";
+        toast(fbErrorMessage(err));
+      });
+    });
+  }
+
+  /* ---------------- Seller: settings ---------------- */
+
+  function renderSellerSettings() {
+    if (!CURRENT_SELLER) { navigate("#/seller"); return; }
+    renderTopbar("تنظیمات", true, "#/seller", false);
+    viewEl.innerHTML =
+      '<div class="form-card">' +
+        '<div class="field"><label for="siteNameInput">نام سایت</label><input type="text" id="siteNameInput" value="' + esc(SITE_NAME) + '" placeholder="مثلاً طلاجات"><div class="field-hint">این نام در بالای صفحه برای همه خریداران نمایش داده می‌شود.</div></div>' +
+        '<button class="btn btn-primary btn-block" id="saveSiteNameBtn">ذخیره</button>' +
+      "</div>";
+    document.getElementById("saveSiteNameBtn").addEventListener("click", function () {
+      var v = document.getElementById("siteNameInput").value.trim();
+      if (!v) { toast("نام سایت نمی‌تواند خالی باشد."); return; }
+      var btn = document.getElementById("saveSiteNameBtn");
+      btn.disabled = true;
+      btn.textContent = "در حال ذخیره...";
+      saveSiteName(v).then(function () {
+        toast("نام سایت ذخیره شد.");
+        render();
+      }).catch(function (err) {
+        btn.disabled = false;
+        btn.textContent = "ذخیره";
+        toast(fbErrorMessage(err));
+      });
+    });
+  }
+})();
+
+</script>
+</body>
+</html>
